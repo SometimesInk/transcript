@@ -33,6 +33,7 @@ import java.util.Scanner;
  * // Add new config element
  * ConfigElement newConfig = ConfigHandler.getInstance().configGet();
  * newConfig.targets.add(new Alert("Hello world!", Collections.singletonList(Alert.Type.PING)));
+ * ConfigHandler.getInstance().configSet(newConfig);
  *   }
  * </pre>
  */
@@ -105,8 +106,7 @@ public class ConfigHandler {
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
-      return new MethodResult<String, StateReadConfig>(null,
-          StateReadConfig.FILE_NOT_FOUND);
+      return new MethodResult<String, StateReadConfig>(null, StateReadConfig.FILE_NOT_FOUND);
     }
 
     StringBuilder fileContent = new StringBuilder();
