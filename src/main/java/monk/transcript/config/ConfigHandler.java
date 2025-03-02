@@ -30,10 +30,9 @@ import java.util.Scanner;
  * // Initialize config
  * ConfigHandler.getInstance().configLoad();
  *
- * // Add a word to config
+ * // Add new config element
  * ConfigElement newConfig = ConfigHandler.getInstance().configGet();
- * newConfig.targets.put("Hello", ChatFormatting.BLUE);
- * ConfigHandler.getInstance().configSet(newConfig);
+ * newConfig.targets.add(new Alert("Hello world!", Collections.singletonList(Alert.Type.PING)));
  *   }
  * </pre>
  */
