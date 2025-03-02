@@ -55,11 +55,14 @@ public class ConfigCommand extends CommandBase {
   }
 
   private void onRemove() {
+    Messaging.sendMessage(new ChatComponentText(ChatFormatting.RED + "Removed phrase"));
   }
 
   private void onAlert() {
+    //subscribe/unsubscribe to the alert player
   }
 
   private void onList() {
+    // Loop through entries
   }
 }
