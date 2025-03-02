@@ -1,0 +1,16 @@
+[
+{
+  "modid": "transcript",
+  "name": "Transcript",
+  "description": "Renders configured chat messages on screen.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": [""],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
