@@ -1,6 +1,6 @@
-package com.ink;
+package monk.transcript;
 
-import com.ink.event.ChatEvent;
+import monk.transcript.event.ChatEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;

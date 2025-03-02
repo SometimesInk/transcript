@@ -2,7 +2,7 @@
 {
   "modid": "transcript",
   "name": "Transcript",
-  "description": "Renders configured chat messages on screen.",
+    "description": "This mod reads and reformats chat messages based on configuration.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",

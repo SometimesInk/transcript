@@ -1,4 +1,4 @@
-package com.ink.event;
+package monk.transcript.event;
 
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
