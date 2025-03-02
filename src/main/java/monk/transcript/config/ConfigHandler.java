@@ -24,25 +24,40 @@ public class ConfigHandler {
     SUCCESS
   }
 
-  private MethodResult<List<String>, StateReadConfig> readConfig() {
+  private MethodResult<List<String>, StateReadConfig> configRead() {
     File configFile = new File("/config/transcript.json");
 
-    if (!configFile.exists()) {
-      return new MethodResult<List<String>, StateReadConfig>(null, StateReadConfig.CONFIG_FILE_DOES_NOT_EXIST);
-    }
+    // Check for file existence
+    if (!configFile.exists()) return new MethodResult<List<String>, StateReadConfig>(null,
+        StateReadConfig.CONFIG_FILE_DOES_NOT_EXIST);
 
-    List<String> output = new ArrayList<String>();
-
+    List<String> fileContent = new ArrayList<String>();
     try {
       Scanner configReader = new Scanner(configFile);
-
       // Loop through file lines and append them to string
       while (configReader.hasNextLine()) {
-        output.add(configReader.nextLine());
+        fileContent.add(configReader.nextLine());
       }
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
-    
+    return new MethodResult<List<String>, StateReadConfig>(fileContent, StateReadConfig.SUCCESS);
+  }
+
+  protected void configParse() {
+
+  }
+
+  protected void configSave() {
+
+  }
+
+  private ConfigElement configSet(ConfigElement config) {
+    this.config = config;
+
+    // Save
+    configSave();
+
+    return this.config;
   }
 }

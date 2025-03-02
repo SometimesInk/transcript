@@ -1,15 +1,22 @@
 package monk.transcript.config;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.mojang.realmsclient.gui.ChatFormatting;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConfigElement {
-  public List<String> targets = new ArrayList<String>();
-  
-  public ConfigElement(List<String> targets) {
+  /**
+   * <p>
+   * Keywords and phrases we're looking for.
+   * </p>
+   */
+  public Map<String, ChatFormatting> targets = new HashMap<String, ChatFormatting>();
+
+  public ConfigElement(Map<String, ChatFormatting> targets) {
     this.targets = targets;
   }
-  
+
   public ConfigElement() {
   }
 }
