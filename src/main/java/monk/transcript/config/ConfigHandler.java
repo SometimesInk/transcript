@@ -165,6 +165,9 @@ public class ConfigHandler {
     }
   }
 
+  // TODO: Cache values to remove the need to check the config file all the time
+  //  (although it would make the system non-hot-reloading)
+
   /**
    * <p>
    * Switches the config element to the given one.
