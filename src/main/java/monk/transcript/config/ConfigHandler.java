@@ -97,11 +97,18 @@ public class ConfigHandler {
    * @see StateReadConfig
    */
   private MethodResult<String, StateReadConfig> configRead() {
-    File configFile = new File("/config/transcript.json");
+    File configFile = new File("config/transcript.json");
 
     // Check for file existence
-    if (!configFile.exists()) return new MethodResult<String, StateReadConfig>(null,
-        StateReadConfig.FILE_NOT_FOUND);
+    if (!configFile.exists()) {
+      try {
+        configFile.createNewFile();
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+      return new MethodResult<String, StateReadConfig>(null,
+          StateReadConfig.FILE_NOT_FOUND);
+    }
 
     StringBuilder fileContent = new StringBuilder();
     try {
@@ -126,7 +133,7 @@ public class ConfigHandler {
   private void configWrite(ConfigElement config) {
     // Write parsed config to file
     try {
-      FileWriter configWriter = new FileWriter("/config/transcript.json");
+      FileWriter configWriter = new FileWriter("config/transcript.json");
       configWriter.write(new Gson().toJson(config));
       configWriter.close();
     } catch (IOException e) {
