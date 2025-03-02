@@ -74,10 +74,13 @@ public class ConfigCommand extends CommandBase {
       if (isPhrase) phrase += args[i] + " ";
     }
 
+    phrase = phrase.substring(0, phrase.length() - 1);
+
     ChatComponentText message = new ChatComponentText(
         ChatFormatting.GREEN + "Added Chat-Alert: \n" +
             ChatFormatting.GREEN + "Phrase: \n" + ChatFormatting.ITALIC + phrase + "\n" +
-            ChatFormatting.GREEN + "Alerts: \n");
+            ChatFormatting.GREEN + "Alerts: \n"
+    );
 
     newConfig.targets.add(new Alert(phrase, notifications));
     ConfigHandler.getInstance().configSet(newConfig);
