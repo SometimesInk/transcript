@@ -12,6 +12,7 @@ public class Alert {
     HIGHLIGHT_BOLD,
     HIGHLIGHT_ITALIC,
     HIGHLIGHT_UNDERLINE,
+    HIGHLIGHT_COLOR_RED,
     PING,
     TITLE;
   }
