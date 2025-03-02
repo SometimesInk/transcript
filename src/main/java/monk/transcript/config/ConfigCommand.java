@@ -54,8 +54,22 @@ public class ConfigCommand extends CommandBase {
     Messaging.sendMessage(new ChatComponentText(ChatFormatting.GREEN + "Added phrase"));
   }
 
+<<<<<<< Updated upstream
   private void onRemove() {
   }
+=======
+    private void onRemove() {
+        Messaging.sendMessage(new ChatComponentText(ChatFormatting.RED + "Removed phrase"));
+    }
+
+    private void onAlert() {
+        //subscribe/unsubscribe to the alert player
+    }
+
+    private void onList() {
+        // Loop through entries
+    }
+>>>>>>> Stashed changes
 
   private void onAlert() {
   }
