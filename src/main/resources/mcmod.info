@@ -1,16 +1,16 @@
 [
-{
-  "modid": "transcript",
-  "name": "Transcript",
+  {
+    "modid": "transcript",
+    "name": "Transcript",
     "description": "This mod reads and reformats chat messages based on configuration.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": [""],
-  "credits": "",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [""],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
 ]
