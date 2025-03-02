@@ -4,20 +4,20 @@ import java.util.List;
 
 public class Alert {
 
-    String targetPhrase;
-    List<Type> alerts;
+  String targetPhrase;
+ 
+  public enum Type {
+    PING,
+    HIGHLIGHT,
+    TITLE
+  }
 
-    public Alert(String targetPhrase, List<Type> alerts) {
-        this.targetPhrase = targetPhrase;
-        this.alerts = alerts;
-    }
+  List<Type> alerts;
 
-    public enum Type {
-        PING,
-        HIGHLIGHT,
-        TITLE
-    }
-
+  public Alert(String targetPhrase, List<Type> alerts) {
+    this.targetPhrase = targetPhrase;
+    this.alerts = alerts;
+  }
 }
 
 
