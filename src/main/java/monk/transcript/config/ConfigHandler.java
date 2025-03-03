@@ -1,10 +1,8 @@
 package monk.transcript.config;
 
 import com.google.gson.Gson;
-import monk.transcript.util.MethodResult;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -50,76 +48,27 @@ public class ConfigHandler {
 
   /**
    * <p>
-   * The output state of the {@link ConfigHandler#configRead()} method.
-   * </p>
-   * <table>
-   *   <tr>
-   *     <th>State</th>
-   *     <th>Meaning</th>
-   *   </tr>
-   *   <tr>
-   *     <td>SUCCESS</td>
-   *     <td>Successfully read file.</td>
-   *   </tr>
-   *   <tr>
-   *     <td>FILE_NOT_FOUND</td>
-   *     <td>Config file does not exist</td>
-   *   </tr>
-   * </table>
-   *
-   * @see ConfigHandler#configRead()
-   */
-  private enum StateReadConfig {
-    /**
-     * <p>
-     * Successfully read file.
-     * </p>
-     *
-     * @see StateReadConfig
-     */
-    SUCCESS,
-    /**
-     * <p>
-     * Config file does not exist.
-     * </p>
-     *
-     * @see StateReadConfig
-     */
-    FILE_NOT_FOUND
-  }
-
-  /**
-   * <p>
    * Reads the config file and outputs its content.
    * </p>
    *
-   * @return File content and the error stream.
-   * @see StateReadConfig
+   * @return File content or NULL if it does not exist (in which case it is
+   * created, yet not populated)
+   * @throws IOException I/O error on file creation.
    */
-  private MethodResult<String, StateReadConfig> configRead() {
+  private String configRead() throws IOException {
     File configFile = new File("config/transcript.json");
 
-    // Check for file existence
-    if (!configFile.exists()) {
-      try {
-        configFile.createNewFile();
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-      return new MethodResult<String, StateReadConfig>(null, StateReadConfig.FILE_NOT_FOUND);
-    }
+    // Indirectly check for file existence by creating the file, if it does not
+    //  exist, it will be created and return NULL, otherwise it will continue
+    if (!configFile.createNewFile()) return null;
 
+    // Read file contents
     StringBuilder fileContent = new StringBuilder();
-    try {
-      Scanner configReader = new Scanner(configFile);
-      // Loop through file lines and append them to string
-      while (configReader.hasNextLine()) {
-        fileContent.append(configReader.nextLine());
-      }
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    return new MethodResult<String, StateReadConfig>(fileContent.toString(), StateReadConfig.SUCCESS);
+    Scanner configReader = new Scanner(configFile);
+    // Loop through file lines and append them to string
+    while (configReader.hasNextLine()) fileContent.append(configReader.nextLine());
+
+    return fileContent.toString();
   }
 
   /**
@@ -128,16 +77,13 @@ public class ConfigHandler {
    * </p>
    *
    * @param config The config element to write.
+   * @throws IOException Could not write to file.
    */
-  private void configWrite(ConfigElement config) {
+  private void configWrite(ConfigElement config) throws IOException {
     // Write parsed config to file
-    try {
-      FileWriter configWriter = new FileWriter("config/transcript.json");
-      configWriter.write(new Gson().toJson(config));
-      configWriter.close();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    FileWriter configWriter = new FileWriter("config/transcript.json");
+    configWriter.write(new Gson().toJson(config));
+    configWriter.close();
   }
 
   /**
@@ -146,12 +92,13 @@ public class ConfigHandler {
    * </p>
    *
    * @param recursionLimit The amount of possible recursion calls left.
+   * @throws IOException Failed to read file.
    */
-  private void configParse(int recursionLimit) {
-    MethodResult<String, StateReadConfig> configFile = configRead();
+  private void configParse(int recursionLimit) throws IOException {
+    String configFile = configRead();
 
-    if (configFile.stmerr == StateReadConfig.SUCCESS) {
-      this.config = new Gson().fromJson(configRead().stmout, ConfigElement.class);
+    if (configFile != null) {
+      this.config = new Gson().fromJson(configRead(), ConfigElement.class);
       return;
     }
 
@@ -165,8 +112,8 @@ public class ConfigHandler {
     }
   }
 
-  // TODO: Cache values to remove the need to check the config file all the time
-  //  (although it would make the system non-hot-reloading)
+// TODO: Cache values to remove the need to check the config file all the time
+//  (although it would make the system non-hot-reloading)
 
   /**
    * <p>
@@ -178,8 +125,13 @@ public class ConfigHandler {
    */
   public ConfigElement configSet(ConfigElement config) {
     this.config = config;
+
     // Save config
-    configWrite(config);
+    try {
+      configWrite(config);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
 
     return config; // For chaining
   }
@@ -200,6 +152,10 @@ public class ConfigHandler {
    * </p>
    */
   public void configLoad() {
-    configParse(16);
+    try {
+      configParse(16);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

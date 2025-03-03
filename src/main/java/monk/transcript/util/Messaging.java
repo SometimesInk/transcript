@@ -12,4 +12,11 @@ public class Messaging {
     message.appendSibling(chatComponentText);
     Minecraft.getMinecraft().thePlayer.addChatMessage(message);
   }
+
+  public static void sendMessage(String s) {
+    ChatComponentText message = new ChatComponentText(ChatFormatting.DARK_GRAY + "[" + ChatFormatting.WHITE +
+        "TRANSCRIPT" + ChatFormatting.DARK_GRAY + "] ");
+    message.appendSibling(new ChatComponentText(s));
+    Minecraft.getMinecraft().thePlayer.addChatMessage(message);
+  }
 }

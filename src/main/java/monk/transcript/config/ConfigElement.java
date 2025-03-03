@@ -15,10 +15,6 @@ public class ConfigElement {
    */
   public List<Alert> targets = new ArrayList<Alert>();
 
-  public ConfigElement(List<Alert> targets) {
-    this.targets = targets;
-  }
-
   public ConfigElement() {
   }
 }

@@ -28,5 +28,10 @@ public class Transcript {
   public void preInit(FMLPreInitializationEvent event) {
     // Initialize config
     ConfigHandler.getInstance().configLoad();
+
+    // Check for config version
+    //noinspection StringEquality
+    if (ConfigHandler.getInstance().configGet().version != VERSION)
+      System.err.println("Transcript config version does not match project version.");
   }
 }

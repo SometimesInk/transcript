@@ -2,6 +2,8 @@ package monk.transcript.alert;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import java.util.List;
+
 public class AlertHandler {
   private static final AlertHandler INSTANCE = new AlertHandler();
 
@@ -12,15 +14,25 @@ public class AlertHandler {
     return INSTANCE;
   }
 
-  public String HighlightString(String fullString, String target, String format) {
-    int targetLocation = fullString.indexOf(target);
+  // TODO: Change from character lookup to a  word-based one
+  public String highlightString(String fullString, String target, String format) {
+    int index = fullString.indexOf(target);
 
-    // Target is not in full string
-    if (targetLocation == -1) return null;
+    // Insert format right before the target substring
+    return fullString.substring(0, index) + format + fullString.substring(index, index + target.length()) +
+        ChatFormatting.RESET + fullString.substring(index + target.length());
+  }
 
-    String prevSection = fullString.substring(0, targetLocation);
-    String lastSection = fullString.substring(targetLocation + target.length());
+  private String highlight(String message, List<Alert> matches) {
+    for (Alert match : matches)
+      message = highlightString(message, match.target, Alert.getHighlightingChatFormatting(match.types));
+    return message;
+  }
 
-    return prevSection + format + target + ChatFormatting.RESET + lastSection;
+  public String check(String message, List<Alert> matches) {
+    // Check if matches contain highlighting
+    if (Alert.hasHighlighting(matches)) return highlight(message, matches);
+
+    return null;
   }
 }
