@@ -7,7 +7,7 @@ import java.util.List;
 public class Alert {
   public String target;
 
-  public class Element {
+  public static class Element {
     public Callback type;
     public ChatFormatting highlighting;
 

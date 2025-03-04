@@ -88,6 +88,38 @@ public class ConfigCommand extends CommandBase {
     Messaging.sendMessage(message);
   }
 
+  private void add(String[] args) throws Exception {
+    if (args.length < 1) throw new Exception("Invalid number of arguments");
+
+    String unparsedType = args[0];
+
+    List<Alert.Element> types = new ArrayList<Alert.Element>();
+
+    // Parse types 
+    for (String type : unparsedType.split(",")) {
+      // Get type and its second parameter if it exists
+      //  (HIGHLIGHT_RED --> HIGHLIGHT & RED)
+      String[] values = type.split("_");
+      types.add(new Alert.Element(monk.transcript.alert.Alert.Callback.valueOf(values[0]),
+          values.length > 1 ? ChatFormatting.valueOf(values[1]) : null));
+    }
+
+    // Find phrase
+    StringBuilder target = new StringBuilder();
+    for (int i = 0; i < args.length; i++) target.append(args[i]).append(i < args.length - 1 ? " " : "");
+
+    Alert alert = new Alert(target.toString(), types);
+
+    // Add alert to config
+    ConfigElement newConfig = ConfigHandler.getInstance().configGet();
+    if (newConfig.addOverride(alert)) {
+      Messaging.sendMessage("Successfully added phrase '" + ChatFormatting.GREEN + target + ChatFormatting.RESET +
+          "'.");
+    } else {
+      Messaging.sendMessage("Could not add phrase, as it already exists.");
+    }
+  }
+
   private void onRemove(String[] subCommands) {
     Messaging.sendMessage(new ChatComponentText(ChatFormatting.RED + "Removed phrase"));
   }

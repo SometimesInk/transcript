@@ -17,4 +17,10 @@ public class ConfigElement {
 
   public ConfigElement() {
   }
+
+  public boolean addOverride(Alert alert) {
+    if (targets.contains(alert)) return false;
+    targets.add(alert);
+    return true;
+  }
 }
