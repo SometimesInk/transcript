@@ -7,131 +7,48 @@ import java.util.List;
 public class Alert {
   public String target;
 
-  public enum Type {
-    HIGHLIGHT_FORMAT_OBFUSCATED,
-    HIGHLIGHT_FORMAT_STRIKETHROUGH,
-    HIGHLIGHT_FORMAT_BOLD,
-    HIGHLIGHT_FORMAT_ITALIC,
-    HIGHLIGHT_FORMAT_UNDERLINE,
+  public class Element {
+    public Callback type;
+    public ChatFormatting highlighting;
 
-    HIGHLIGHT_COLOR_BLACK,
-    HIGHLIGHT_COLOR_DARK_BLUE,
-    HIGHLIGHT_COLOR_DARK_GREEN,
-    HIGHLIGHT_COLOR_DARK_AQUA,
-    HIGHLIGHT_COLOR_DARK_RED,
-    HIGHLIGHT_COLOR_DARK_PURPLE,
-    HIGHLIGHT_COLOR_GOLD,
-    HIGHLIGHT_COLOR_GRAY,
-    HIGHLIGHT_COLOR_DARK_GRAY,
-    HIGHLIGHT_COLOR_BLUE,
-    HIGHLIGHT_COLOR_GREEN,
-    HIGHLIGHT_COLOR_AQUA,
-    HIGHLIGHT_COLOR_RED,
-    HIGHLIGHT_COLOR_LIGHT_PURPLE,
-    HIGHLIGHT_COLOR_YELLOW,
-    HIGHLIGHT_COLOR_WHITE,
+    public Element(Callback type, ChatFormatting highlighting) throws Exception {
+      this.type = type;
+      if (type != Callback.HIGHLIGHT && highlighting != null) throw new Exception("highlight must be " +
+          "null for non-highlighting types.");
+      this.highlighting = highlighting;
+    }
 
+    public Element(Callback type) throws Exception {
+      if (type == Callback.HIGHLIGHT) throw new Exception("Must specify highlighting.");
+      this.type = type;
+    }
+
+    @Override
+    public String toString() {
+      return highlighting != null ? highlighting.toString() : "null";
+    }
+  }
+
+  public enum Callback {
+    HIGHLIGHT,
     PING,
     TITLE
   }
 
-  public List<Type> types;
+  public List<Element> types;
 
-  public Alert(String target, List<Type> types) {
+  public Alert(String target, List<Element> types) {
     this.target = target;
     this.types = types;
   }
 
-  public static boolean isHighlight(Type type) {
-    return type.toString().startsWith("HIGHLIGHT_");
-  }
+  public static String getHighlightingSequence(List<Element> types) {
+    StringBuilder seq = new StringBuilder();
 
-  /**
-   * <p>
-   * Check whether the given list has any highlighting types.
-   * </p>
-   *
-   * @param types List of check for highlighting.
-   */
-  public static boolean hasHighlighting(List<Alert> types) {
-    for (Alert alert : types) for (Type type : alert.types) if (isHighlight(type)) return true;
-    return false;
-  }
+    // Add chat formatting of all highlight types to sequence
+    for (Element e : types) if (e.type == Callback.HIGHLIGHT) seq.append(e);
 
-  public static String getHighlightingChatFormatting(List<Type> types) {
-    StringBuilder highlight = new StringBuilder();
-    for (Type type : types) {
-      if (!isHighlight(type)) continue;
-
-      // Parse highlighting type
-      switch (type) {
-        case HIGHLIGHT_FORMAT_OBFUSCATED:
-          highlight.append(ChatFormatting.OBFUSCATED);
-          break;
-        case HIGHLIGHT_FORMAT_STRIKETHROUGH:
-          highlight.append(ChatFormatting.STRIKETHROUGH);
-          break;
-        case HIGHLIGHT_FORMAT_BOLD:
-          highlight.append(ChatFormatting.BOLD);
-          break;
-        case HIGHLIGHT_FORMAT_ITALIC:
-          highlight.append(ChatFormatting.ITALIC);
-          break;
-        case HIGHLIGHT_FORMAT_UNDERLINE:
-          highlight.append(ChatFormatting.UNDERLINE);
-          break;
-        case HIGHLIGHT_COLOR_BLACK:
-          highlight.append(ChatFormatting.BLACK);
-          break;
-        case HIGHLIGHT_COLOR_DARK_BLUE:
-          highlight.append(ChatFormatting.DARK_BLUE);
-          break;
-        case HIGHLIGHT_COLOR_DARK_GREEN:
-          highlight.append(ChatFormatting.DARK_GREEN);
-          break;
-        case HIGHLIGHT_COLOR_DARK_AQUA:
-          highlight.append(ChatFormatting.DARK_AQUA);
-          break;
-        case HIGHLIGHT_COLOR_DARK_RED:
-          highlight.append(ChatFormatting.DARK_RED);
-          break;
-        case HIGHLIGHT_COLOR_DARK_PURPLE:
-          highlight.append(ChatFormatting.DARK_PURPLE);
-          break;
-        case HIGHLIGHT_COLOR_GOLD:
-          highlight.append(ChatFormatting.GOLD);
-          break;
-        case HIGHLIGHT_COLOR_GRAY:
-          highlight.append(ChatFormatting.GRAY);
-          break;
-        case HIGHLIGHT_COLOR_DARK_GRAY:
-          highlight.append(ChatFormatting.DARK_GRAY);
-          break;
-        case HIGHLIGHT_COLOR_BLUE:
-          highlight.append(ChatFormatting.BLUE);
-          break;
-        case HIGHLIGHT_COLOR_GREEN:
-          highlight.append(ChatFormatting.GREEN);
-          break;
-        case HIGHLIGHT_COLOR_AQUA:
-          highlight.append(ChatFormatting.AQUA);
-          break;
-        case HIGHLIGHT_COLOR_RED:
-          highlight.append(ChatFormatting.RED);
-          break;
-        case HIGHLIGHT_COLOR_LIGHT_PURPLE:
-          highlight.append(ChatFormatting.LIGHT_PURPLE);
-          break;
-        case HIGHLIGHT_COLOR_YELLOW:
-          highlight.append(ChatFormatting.WHITE);
-          break;
-        case HIGHLIGHT_COLOR_WHITE:
-          highlight.append(ChatFormatting.WHITE);
-          break;
-      }
-    }
-
-    return highlight.toString().isEmpty() ? null : highlight.toString();
+    return seq.toString();
   }
 }
 

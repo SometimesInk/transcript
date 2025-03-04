@@ -29,19 +29,13 @@ public class ConfigCommand extends CommandBase {
   public void processCommand(ICommandSender sender, String[] args) throws CommandException {
     if (args.length < 1) throw new CommandException("Invalid arguments. Usage: \n" + getCommandUsage(sender));
 
-    String subCommand1 = args[0];
+    String subCmd = args[0];
 
-    if (subCommand1.equalsIgnoreCase("add")) {
-      onAdd(args);
-    } else if (subCommand1.equalsIgnoreCase("remove")) {
-      onRemove(args);
-    } else if (subCommand1.equalsIgnoreCase("alert")) {
-      onAlert();
-    } else if (subCommand1.equalsIgnoreCase("list")) {
-      onList();
-    } else {
-      throw new CommandException("Invalid arguments. Usage: \n" + getCommandUsage(sender));
-    }
+    if (subCmd.equalsIgnoreCase("add")) onAdd(args);
+    else if (subCmd.equalsIgnoreCase("remove")) onRemove(args);
+    else if (subCmd.equalsIgnoreCase("alert")) onAlert();
+    else if (subCmd.equalsIgnoreCase("list")) onList();
+    else throw new CommandException("Invalid arguments. Usage: \n" + getCommandUsage(sender));
   }
 
   @Override
@@ -49,11 +43,16 @@ public class ConfigCommand extends CommandBase {
     return 0;
   }
 
+  private void onHelp(String[] args) {
+    // TODO: Customize and add args
+  }
+
   private void onAdd(String[] args) {
+    // TODO: I'll redo this part tmr, maybe, perhaps (and get rid of that error).
 
     ConfigElement newConfig = ConfigHandler.getInstance().configGet();
 
-    List<Alert.Type> notifications = new ArrayList<Alert.Type>();
+    List<Alert.Callback> notifications = new ArrayList<Alert.Callback>();
     ChatComponentText notificationsOrdered = new ChatComponentText("");
     boolean isPhrase = false;
     String phrase = "";
@@ -63,7 +62,7 @@ public class ConfigCommand extends CommandBase {
       if (!isPhrase) {
         // Tries to convert the argument to an Alert Type
         try {
-          Alert.Type type = Alert.Type.valueOf(args[i].toUpperCase());
+          Alert.Callback type = Alert.Callback.valueOf(args[i].toUpperCase());
           notifications.add(type);
           notificationsOrdered.appendSibling(new ChatComponentText(ChatFormatting.ITALIC + "- " + type.name() + "\n"));
           // If it doesn't correspond to an Alert Type assume it's the phrase
