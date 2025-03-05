@@ -11,9 +11,9 @@ public class Alert {
     public Callback type;
     public ChatFormatting highlighting;
 
-    public Element(Callback type, ChatFormatting highlighting) throws Exception {
+    public Element(Callback type, ChatFormatting highlighting) throws NullPointerException {
       this.type = type;
-      if (type != Callback.HIGHLIGHT && highlighting != null) throw new Exception("highlight must be " +
+      if (type != Callback.HIGHLIGHT && highlighting != null) throw new NullPointerException("highlight must be " +
           "null for non-highlighting types.");
       this.highlighting = highlighting;
     }
@@ -49,6 +49,15 @@ public class Alert {
     for (Element e : types) if (e.type == Callback.HIGHLIGHT) seq.append(e);
 
     return seq.toString();
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder formattedTypes = new StringBuilder();
+    for (int i = 0; i < types.size(); i++)
+      formattedTypes.append(types.get(i).type.name()).append(i < types.size() - 1 ? " " : "");
+
+    return target + " - " + formattedTypes;
   }
 }
 
