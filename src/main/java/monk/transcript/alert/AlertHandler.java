@@ -15,8 +15,6 @@ public class AlertHandler {
     return INSTANCE;
   }
 
-  // TODO: Change from character lookup to a  word-based one
-
   /**
    * <p>
    * This method adds the format before the target (which must be a singular word).
@@ -53,9 +51,7 @@ public class AlertHandler {
     List<Alert> highlightingMatches = new ArrayList<Alert>();
 
     for (Alert match : matches)
-      for (Alert.Element type : match.types)
-        if (type.type == Alert.Callback.HIGHLIGHT)
-          highlightingMatches.add(match);
+      for (AlertElement type : match.types) if (type.type == AlertCallback.HIGHLIGHT) highlightingMatches.add(match);
 
     if (!highlightingMatches.isEmpty()) return highlight(message, highlightingMatches);
 

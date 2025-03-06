@@ -10,8 +10,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Handle embedded words (like "pink" which contains the word "ink")
-
 public class EventChat {
   @SubscribeEvent
   public void onChat(ClientChatReceivedEvent event) {

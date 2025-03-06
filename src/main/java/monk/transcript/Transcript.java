@@ -32,6 +32,6 @@ public class Transcript {
     // Check for config version
     //noinspection StringEquality
     if (ConfigHandler.getInstance().configGet().version != VERSION)
-      System.err.println("Transcript config version does not match project version.");
+      throw new RuntimeException("Transcript config version does not match project version.");
   }
 }

@@ -23,4 +23,13 @@ public class ConfigElement {
     targets.add(alert);
     return true;
   }
+
+  public boolean removePhrase(String target) {
+    for (Alert alert : targets) {
+      if (!alert.target.equals(target)) continue;
+      targets.remove(alert);
+      return true;
+    }
+    return false;
+  }
 }
