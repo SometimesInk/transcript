@@ -31,7 +31,8 @@ public class ConfigCommand extends CommandBase {
 
     String cmd = args[0];
 
-    if (cmd.equalsIgnoreCase("add")) onAdd(args);
+    if (cmd.equalsIgnoreCase("help")) onHelp(args);
+    else if (cmd.equalsIgnoreCase("add")) onAdd(args);
     else if (cmd.equalsIgnoreCase("remove")) onRemove(args);
     else if (cmd.equalsIgnoreCase("alert")) onAlert();
     else if (cmd.equalsIgnoreCase("list")) onList();
@@ -44,7 +45,7 @@ public class ConfigCommand extends CommandBase {
   }
 
   private void onHelp(String[] args) {
-    // TODO: Customize and add args
+    // Thing
   }
 
   private void onAdd(String[] args) throws CommandException {
@@ -87,8 +88,6 @@ public class ConfigCommand extends CommandBase {
 
   private void onList() {
     Messaging.sendMessage("Words to react to:");
-    for (Alert alert : ConfigHandler.getInstance().configGet().targets) {
-      Messaging.sendMessage(alert.toString());
-    }
+    for (Alert alert : ConfigHandler.getInstance().configGet().targets) Messaging.sendMessage(alert.toString());
   }
 }
