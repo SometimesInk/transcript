@@ -12,15 +12,6 @@ public class Alert {
     this.types = types;
   }
 
-  public static String getHighlightingSequence(List<AlertElement> types) {
-    StringBuilder seq = new StringBuilder();
-
-    // Add chat formatting of all highlight types to sequence
-    for (AlertElement e : types) if (e.type == AlertCallback.HIGHLIGHT) seq.append(e);
-
-    return seq.toString();
-  }
-
   @Override
   public String toString() {
     StringBuilder formattedTypes = new StringBuilder();

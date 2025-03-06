@@ -1,26 +1,27 @@
 package monk.transcript.config;
 
-import monk.transcript.alert.Alert;
 import monk.transcript.command.SubCommand;
-import monk.transcript.util.Messaging;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class ConfigSubCommandList extends SubCommand {
+public class ConfigSubCommandReload extends SubCommand {
   @Override
   public String getName() {
-    return "list";
+    return "reload";
   }
 
   @Override
   public boolean process(String[] args) {
-    if (args.length > 1) return false;
-    Messaging.sendMessage("Words to react to:");
-    for (Alert alert : ConfigHandler.getInstance().configGet().targets) Messaging.sendMessage(alert.toString());
-    return true;
+    try {
+      ConfigHandler.getInstance().reload();
+      return true;
+    } catch (IOException e) {
+      return false;
+    }
   }
 
   @Override

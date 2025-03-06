@@ -1,6 +1,7 @@
 package monk.transcript.event;
 
 import monk.transcript.alert.Alert;
+import monk.transcript.alert.AlertCheckResult;
 import monk.transcript.alert.AlertHandler;
 import monk.transcript.config.ConfigHandler;
 import monk.transcript.util.Messaging;
@@ -19,13 +20,13 @@ public class EventChat {
       if (!event.message.getUnformattedText().contains(alert.target)) continue;
       matches.add(alert);
     }
-
     if (matches.isEmpty()) return;
 
-    event.setCanceled(true);
-
-    String msg = AlertHandler.getInstance().check(event.message.getFormattedText(), matches);
-
-    if (msg != null) Messaging.sendMessage(msg);
+    // Check alerts
+    AlertCheckResult output = AlertHandler.getInstance().check(event.message.getFormattedText(), matches);
+    if (output.overrideMessage && output.message != null) {
+      event.setCanceled(true);
+      Messaging.sendMessage(output.message);
+    }
   }
 }

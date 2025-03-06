@@ -1,6 +1,7 @@
 package monk.transcript.alert;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
+import monk.transcript.highlight.Highlighting;
+import monk.transcript.sound.Pinging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,46 +16,26 @@ public class AlertHandler {
     return INSTANCE;
   }
 
-  /**
-   * <p>
-   * This method adds the format before the target (which must be a singular word).
-   * </p>
-   */
-  public String highlightStringWord(String[] words, String target, String format) {
-    int targetI = -1;
-    // Find where the target lies in the sentence
-    for (int i = 0; i < words.length; i++)
-      if (words[i].equals(target)) {
-        targetI = i;
-        break;
-      }
+  public AlertCheckResult check(String message, List<Alert> matches) {
+    List<Alert> highlightMatches = new ArrayList<Alert>();
+    List<Alert> pingMatches = new ArrayList<Alert>();
 
-    if (targetI == -1) return null;
+    for (Alert alert : matches)
+      for (AlertElement element : alert.types)
+        switch (element.type) {
+          case HIGHLIGHT:
+            if (element.highlighting == null) throw new NullPointerException("An highlight alert element was defined" +
+                "without any highlight property.");
+            if (!highlightMatches.contains(alert)) highlightMatches.add(alert);
+            break;
+          case PING:
+            if (!pingMatches.contains(alert)) pingMatches.add(alert);
+            break;
+        }
 
-    // Concatenate words to a single sentence separated with spaces
-    StringBuilder sentence = new StringBuilder();
-    for (int i = 0; i < words.length; i++) sentence.append(words[i]).append(i < words.length - 1 ? " " : "");
-
-    return sentence.substring(0, targetI) + format + target + ChatFormatting.RESET +
-        sentence.substring(targetI + target.length() + ChatFormatting.RESET.toString().length());
-  }
-
-  private String highlight(String message, List<Alert> matches) {
-    for (Alert match : matches)
-      message = highlightStringWord(message.split(" "), match.target,
-          Alert.getHighlightingSequence(match.types));
-    return message;
-  }
-
-  public String check(String message, List<Alert> matches) {
-    // Check if matches contain highlighting
-    List<Alert> highlightingMatches = new ArrayList<Alert>();
-
-    for (Alert match : matches)
-      for (AlertElement type : match.types) if (type.type == AlertCallback.HIGHLIGHT) highlightingMatches.add(match);
-
-    if (!highlightingMatches.isEmpty()) return highlight(message, highlightingMatches);
-
-    return null;
+    String msg = null;
+    if (!highlightMatches.isEmpty()) msg = Highlighting.highlight(message, highlightMatches);
+    if (!pingMatches.isEmpty()) Pinging.ping(message, pingMatches);
+    return new AlertCheckResult(msg, !highlightMatches.isEmpty());
   }
 }

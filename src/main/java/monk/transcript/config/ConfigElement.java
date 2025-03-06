@@ -15,6 +15,8 @@ public class ConfigElement {
    */
   public List<Alert> targets = new ArrayList<Alert>();
 
+  public float pingVolume = 1.0F;
+
   public ConfigElement() {
   }
 

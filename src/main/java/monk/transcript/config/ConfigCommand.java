@@ -1,16 +1,15 @@
 package monk.transcript.config;
 
 import monk.transcript.command.Command;
-import monk.transcript.command.SubCommand;
 import net.minecraft.command.ICommandSender;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class ConfigCommand extends Command {
-  @Override
-  public List<SubCommand> getSubCommands() {
-    return Arrays.asList(new ConfigSubCommandAdd(), new ConfigSubCommandRemove(), new ConfigSubCommandList());
+  public ConfigCommand() {
+    subCommands.add(new ConfigSubCommandAdd());
+    subCommands.add(new ConfigSubCommandList());
+    subCommands.add(new ConfigSubCommandPingVolume());
+    subCommands.add(new ConfigSubCommandReload());
+    subCommands.add(new ConfigSubCommandRemove());
   }
 
   @Override
@@ -20,8 +19,6 @@ public class ConfigCommand extends Command {
 
   @Override
   public String getCommandUsage(ICommandSender sender) {
-    return "/transcript <add> [HIGHLIGHT,PING,TITLE] <phrase>\n" +
-        "/transcript <remove> <phrase>\n" +
-        "/transcript <list>";
+    return "/transcript <add|list|pingVolume|reload|remove> [type/phrase] [phrase]";
   }
 }

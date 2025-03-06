@@ -10,6 +10,9 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+import java.io.IOException;
+
+@SuppressWarnings("StringEquality")
 @Mod(modid = Transcript.MODID, version = Transcript.VERSION)
 public class Transcript {
   public static final String MODID = "transcript";
@@ -25,12 +28,11 @@ public class Transcript {
   }
 
   @EventHandler
-  public void preInit(FMLPreInitializationEvent event) {
+  public void preInit(FMLPreInitializationEvent event) throws IOException {
     // Initialize config
     ConfigHandler.getInstance().configLoad();
 
     // Check for config version
-    //noinspection StringEquality
     if (ConfigHandler.getInstance().configGet().version != VERSION)
       throw new RuntimeException("Transcript config version does not match project version.");
   }

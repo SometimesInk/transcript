@@ -1,25 +1,30 @@
 package monk.transcript.config;
 
-import monk.transcript.alert.Alert;
 import monk.transcript.command.SubCommand;
-import monk.transcript.util.Messaging;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 
 import java.util.Collections;
 import java.util.List;
 
-public class ConfigSubCommandList extends SubCommand {
+public class ConfigSubCommandPingVolume extends SubCommand {
   @Override
   public String getName() {
-    return "list";
+    return "pingVolume";
   }
 
   @Override
   public boolean process(String[] args) {
-    if (args.length > 1) return false;
-    Messaging.sendMessage("Words to react to:");
-    for (Alert alert : ConfigHandler.getInstance().configGet().targets) Messaging.sendMessage(alert.toString());
+    if (args.length < 1) return false;
+
+    // Set ping volume
+    ConfigElement newConfig = ConfigHandler.getInstance().configGet();
+    try {
+      newConfig.pingVolume = Float.parseFloat(args[1]);
+    } catch (Exception e) {
+      return false;
+    }
+    ConfigHandler.getInstance().configSet(newConfig);
     return true;
   }
 

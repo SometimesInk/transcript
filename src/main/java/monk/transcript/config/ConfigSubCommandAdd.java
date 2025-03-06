@@ -2,9 +2,12 @@ package monk.transcript.config;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import monk.transcript.alert.Alert;
+import monk.transcript.alert.AlertCallback;
 import monk.transcript.alert.AlertElement;
 import monk.transcript.command.SubCommand;
 import monk.transcript.util.Messaging;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.BlockPos;
 
 import java.util.List;
 
@@ -34,5 +37,13 @@ public class ConfigSubCommandAdd extends SubCommand {
         "Could not add phrase, as it already exists.");
     ConfigHandler.getInstance().configSet(newConfig);
     return true;
+  }
+
+  @Override
+  public List<String> getTabCompletions(ICommandSender sender, String[] args, BlockPos pos) {
+    if (args.length < 1 || args.length > 2) return null;
+
+    return args[args.length - 1].startsWith("HIGHLIGHT") ? AlertCallback.getExtendedHighlightValues() :
+        AlertCallback.getValues();
   }
 }

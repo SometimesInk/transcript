@@ -50,21 +50,20 @@ public class ConfigHandler {
    * <p>
    * Reads the config file and outputs its content.
    * </p>
+   * <p>
+   * This method assumes that the file exists.
+   * </p>
    *
-   * @return File content or NULL if it does not exist (in which case it is
-   * created, yet not populated)
+   * @return File content
    * @throws IOException I/O error on file creation.
    */
   private String configRead() throws IOException {
     File configFile = new File("config/transcript.json");
 
-    // Indirectly check for file existence by creating the file, if it does not
-    //  exist, it will be created and return NULL, otherwise it will continue
-    if (!configFile.createNewFile()) return null;
-
     // Read file contents
     StringBuilder fileContent = new StringBuilder();
     Scanner configReader = new Scanner(configFile);
+
     // Loop through file lines and append them to string
     while (configReader.hasNextLine()) fileContent.append(configReader.nextLine());
 
@@ -91,29 +90,11 @@ public class ConfigHandler {
    * Assigns the config element from the config file.
    * </p>
    *
-   * @param recursionLimit The amount of possible recursion calls left.
    * @throws IOException Failed to read file.
    */
-  private void configParse(int recursionLimit) throws IOException {
-    String configFile = configRead();
-
-    if (configFile != null) {
-      this.config = new Gson().fromJson(configRead(), ConfigElement.class);
-      return;
-    }
-
-    // In this case, file does not exist
-    // Create file and call this method back for inspection safely
-    configWrite(new ConfigElement());
-    if (recursionLimit > 0) configParse(recursionLimit - 1);
-    else {
-      System.err.println("The 'configParse()' method in 'ConfigHandler' hit its recursion limit.");
-      this.config = new ConfigElement();
-    }
+  private void configParse() throws IOException {
+    config = new Gson().fromJson(configRead(), ConfigElement.class);
   }
-
-// TODO: Cache values to remove the need to check the config file all the time
-//  (although it would make the system non-hot-reloading)
 
   /**
    * <p>
@@ -125,13 +106,6 @@ public class ConfigHandler {
    */
   public ConfigElement configSet(ConfigElement config) {
     this.config = config;
-
-    // Save config
-    try {
-      configWrite(config);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
 
     return config; // For chaining
   }
@@ -147,15 +121,23 @@ public class ConfigHandler {
 
   /**
    * <p>
+   * Writes config to file.
+   * </p>
+   */
+  public void reload() throws IOException {
+    // Save config
+    configWrite(config);
+  }
+
+  /**
+   * <p>
    * Loads the file into the config element. Serves as an interface for
    * initialization.
    * </p>
    */
-  public void configLoad() {
-    try {
-      configParse(16);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+  public void configLoad() throws IOException {
+    // Create file if it does not exist
+    if (new File("config/transcript.json").createNewFile()) configWrite(config);
+    else configParse();
   }
 }
